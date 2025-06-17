@@ -1,2 +1,1539 @@
-# asiri
-موقع لتقارير الحوادث المرورية وجاري تطويره حاليا خاص بهيئة الطرق العامة التابعة لوزارة النقل
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بلاغ عاجل بوقوع حادث مروري</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --h1-after-background: #f39c12;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #eef1f5;
+            color: #333;
+            direction: rtl;
+            text-align: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: #ffffff;
+            padding: 35px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            max-width: 850px;
+            margin: 25px auto;
+            border: 1px solid #e0e0e0;
+            width: 100%;
+        }
+        
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 2.2em;
+            position: relative;
+        }
+        
+        h1::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--h1-after-background);
+            margin: 15px auto 0;
+            border-radius: 2px;
+            transition: background-color 0.3s ease;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 12px;
+            margin-top: 40px;
+            font-size: 1.6em;
+            text-align: right;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            margin-left: 10px;
+            color: #555;
+            font-size: 1.05em;
+        }
+        
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="date"],
+        .form-group textarea,
+        .form-group select,
+        .form-group input[list],
+        .form-group input[type="tel"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1.05em;
+            box-sizing: border-box;
+            background-color: #fcfcfc;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group input[type="date"]:focus,
+        .form-group textarea:focus,
+        .form-group select:focus,
+        .form-group input[list]:focus,
+        .form-group input[type="tel"]:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
+            background-color: #fff;
+        }
+        
+        textarea#accident-reason-display {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        input#accident-reason-search {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .car-details {
+            margin-top: 20px;
+            padding: 15px 25px;
+            border-right: 4px solid #f39c12;
+            background-color: #fffaf0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .car-details div {
+            margin-bottom: 12px;
+        }
+        
+        .car-plate-numbers input {
+            width: 100%;
+            max-width: 120px;
+            text-align: center;
+            margin: 0 5px;
+            padding: 10px 8px;
+        }
+        
+        .car-plate-numbers span {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 5px 0;
+            font-size: 1.05em;
+            justify-content: flex-end;
+        }
+        
+        .checkbox-container input[type="checkbox"],
+        .checkbox-container input[type="radio"] {
+            margin-right: 15px;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #25d366;
+            border-radius: 4px;
+        }
+        
+        .checkbox-container label {
+            font-weight: normal;
+            font-size: 1em;
+            color: #444;
+        }
+        
+        .footer-note {
+            text-align: center;
+            margin-top: 45px;
+            font-size: 1.1em;
+            color: #777;
+            font-weight: 600;
+        }
+        
+        .copy-button-container {
+            text-align: center;
+            margin-top: 40px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .copy-button, .back-button, .settings-button {
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .copy-button {
+            background-color: #25d366;
+            box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
+        }
+        
+        .copy-button:hover {
+            background-color: #1da851;
+            transform: translateY(-2px);
+        }
+        
+        .back-button {
+            background-color: #95a5a6;
+            box-shadow: 0 4px 10px rgba(149, 165, 166, 0.3);
+        }
+        
+        .back-button:hover {
+            background-color: #7f8c8d;
+            transform: translateY(-2px);
+        }
+        
+        .settings-button {
+            background-color: #6c757d;
+            box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
+        }
+        
+        .settings-button:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        .copy-button:active, .back-button:active, .settings-button:active {
+            transform: translateY(0);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 30px auto;
+            padding: 30px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(-20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        
+        .close-button {
+            color: #aaa;
+            float: left;
+            font-size: 28px;
+            font-weight: bold;
+            margin-left: -10px;
+        }
+        
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .modal-content h3 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        #report-output {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.0em;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            resize: vertical;
+        }
+        
+        .modal-copy-button-container {
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        .modal-copy-button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .modal-copy-button:hover {
+            background-color: #2980b9;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+            font-size: 1.1em;
+        }
+
+        /* Initial Page Styles */
+        #initial-page {
+            text-align: center;
+            padding: 50px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        #initial-page h1 {
+            color: #2c3e50;
+            margin-bottom: 40px;
+        }
+        
+        #initial-page h1::after {
+            display: none;
+        }
+        
+        .accident-type-option {
+            margin-bottom: 20px;
+        }
+        
+        .accident-type-option button {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 80%;
+            max-width: 300px;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .accident-type-option button.fatal {
+            background-color: #c0392b;
+        }
+        
+        .accident-type-option button.injuries {
+            background-color: #f39c12;
+        }
+        
+        .accident-type-option button.normal {
+            background-color: #3498db;
+        }
+        
+        .accident-type-option button:hover {
+            opacity: 0.9;
+        }
+        
+        #report-form-container, #settings-page {
+            display: none; 
+        }
+        
+        .location-input-group {
+            display: none;
+            margin-top: 20px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .location-input-group label {
+            font-weight: 600;
+            margin-left: 10px;
+            min-width: 160px;
+            color: #555;
+            font-size: 1.05em;
+        }
+        
+        .location-input-group input {
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        /* Kilometer Mark Specific Styling */
+        .kilometer-mark-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: wrap;
+            position: relative;
+            justify-content: flex-end;
+        }
+
+        .kilometer-mark-group label {
+            min-width: 160px;
+            margin-left: 10px;
+        }
+
+        .input-with-label-bg {
+            position: relative;
+            flex: 1;
+        }
+
+        .input-with-label-bg input {
+            width: 100%;
+            text-align: center;
+            padding-right: 35px;
+            padding-left: 35px;
+        }
+
+        .input-with-label-bg::before {
+            content: attr(data-text);
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #b0b0b0;
+            font-size: 0.9em;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .input-with-label-bg.km::before {
+            left: 8px;
+            right: auto;
+        }
+
+        /* Settings Page Specific Styles */
+        #settings-page h2 {
+            text-align: right;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            color: #34495e;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        #settings-page .form-group {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        #settings-page .form-group label {
+            min-width: unset;
+            margin-left: 0;
+            margin-bottom: 5px;
+        }
+        
+        #settings-page .form-group input[type="text"],
+        #settings-page .form-group select {
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        #settings-page .copy-button-container {
+            margin-top: 15px;
+            margin-bottom: 30px;
+            justify-content: flex-end;
+        }
+        
+        #settings-page .copy-button-container button {
+            padding: 10px 20px;
+            font-size: 1.1em;
+        }
+        
+        #settings-page select[size] {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #fcfcfc;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div id="initial-page">
+        <h1>الرجاء اختيار نوع الحادث</h1>
+        <div class="accident-type-option">
+            <button class="fatal" onclick="startReport('fatal')">حادث وفيات 🔴</button>
+        </div>
+        <div class="accident-type-option">
+            <button class="injuries" onclick="startReport('injuries')">حادث إصابات 🟡</button>
+        </div>
+        <div class="accident-type-option">
+            <button class="normal" onclick="startReport('normal')">حادث عادي 🔵</button>
+        </div>
+        <div class="accident-type-option">
+            <button class="settings-button" onclick="showSettingsPage()">⚙ الإعدادات</button>
+        </div>
+    </div>
+
+    <div id="report-form-container" class="container">
+        <h1 id="report-title">بلاغ عاجل بوقوع حادث مروري</h1>
+
+        <div class="form-group">
+            <label for="report-id">🔳 رقم البلاغ في رقابة +:</label>
+            <input type="text" id="report-id" value="">
+        </div>
+
+        <h2>📍 معلومات الموقع
+            <span id="location-field" class="location-input-group">
+                : <input type="text" id="location-text" placeholder="أدخل الموقع هنا">
+            </span>
+        </h2>
+        <div class="form-group">
+            <label for="road-name-select">🛣 اسم الطريق :</label>
+            <select id="road-name-select"></select>
+        </div>
+        <div class="form-group">
+            <label for="road-number-display">🛣 رقم الطريق :</label>
+            <input type="text" id="road-number-display" readonly>
+        </div>
+        <div class="form-group">
+            <label for="road-type">🛣 نوع الطريق :</label>
+            <select id="road-type">
+                <option value="مفرد">مفرد</option>
+                <option value="مزدوج">مزدوج</option>
+                <option value="سريع" selected>سريع</option>
+            </select>
+        </div>
+        <div class="form-group kilometer-mark-group">
+            <label for="kilometer-mark-m">🛣 العلامة الكيلومترية:</label>
+            <span>(</span>
+            <div class="input-with-label-bg" data-text="متر">
+                <input type="number" id="kilometer-mark-m" placeholder="">
+            </div>
+            <span>+</span>
+            <div class="input-with-label-bg km" data-text="كيلو">
+                <input type="number" id="kilometer-mark-km" placeholder="">
+            </div>
+            <span>)</span>
+        </div>
+        <div class="form-group">
+            <label for="direction">🛣 الاتجاه :</label>
+            <select id="direction">
+                <option value="رئيسي" selected>رئيسي</option>
+                <option value="عكسي">عكسي</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="location-description">🛣 وصف الموقع :</label>
+            <textarea id="location-description" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="contract-number">🛣 رقم العقد :</label>
+            <input type="text" id="contract-number" value="404">
+        </div>
+        <div class="form-group">
+            <label for="contractor-name">🛣 اسم المقاول :</label>
+            <input type="text" id="contractor-name" value="مطلق الغويري للمقاولات">
+        </div>
+
+        <h2>🛑 نتيجة الحادث</h2>
+        <div class="form-group">
+            <label for="injuries-count">⛑ عدد الإصابات :</label>
+            <input type="text" id="injuries-count" value="لايوجد">
+        </div>
+        <div class="form-group">
+            <label for="fatalities-count">⛑ عدد الوفيات :</label>
+            <input type="text" id="fatalities-count" value="لايوجد">
+        </div>
+        <div class="form-group">
+            <label for="damages-input">⛑ التلفيات:</label>
+            <input type="text" id="damages-input" list="damages-options" value="لايوجد" placeholder="أدخل التلفيات أو اختر">
+            <datalist id="damages-options"></datalist>
+        </div>
+
+        <div class="form-group">
+            <label for="car-count">🚙 عدد السيارات :</label>
+            <input type="tel" id="car-count" min="0" value="2" pattern="[0-9]*" inputmode="numeric">
+        </div>
+        <div id="car-details-container">
+        </div>
+        <datalist id="car-models-options"></datalist> 
+        <div class="form-group">
+            <label for="accident-reason-search">📃 سبب الحادث (ابحث أو اكتب):</label>
+            <input type="text" id="accident-reason-search" list="accident-reason-options" placeholder="ابحث عن سبب أو اكتبه">
+            <datalist id="accident-reason-options"></datalist>
+            <label for="accident-reason-display" style="display: none;">السبب:</label> <textarea id="accident-reason-display" rows="4" class="large-input"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="hour">■ الساعة:</label>
+            <input type="text" id="hour" value="">
+        </div>
+        <div class="form-group">
+            <label for="date">■ التاريخ:</label>
+            <input type="date" id="date" value="">
+        </div>
+        <div class="form-group">
+            <label for="day">■ اليوم :</label>
+            <input type="text" id="day" readonly>
+        </div>
+
+        <h2>🗒 معلومات عامة</h2>
+        <div class="form-group">
+            <label for="traffic-delay-input">🏁 زمن تباطؤ حركة المرور:</label>
+            <input type="text" id="traffic-delay-input" list="traffic-delay-options" value="لا يوجد تباطؤ" class="large-input">
+            <datalist id="traffic-delay-options"></datalist>
+        </div>
+        <div class="form-group">
+            <label for="weather-condition">🏞 الحالة الجوية :</label>
+            <select id="weather-condition">
+                <option value="صحو" selected>صحو</option>
+                <option value="ممطر">ممطر</option>
+                <option value="غائم">غائم</option>
+                <option value="عاصفة رملية">عاصفة رملية</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="road-condition">🛣 حالة الطريق :</label>
+            <input type="text" id="road-condition" value="جيدة">
+        </div>
+        <div class="form-group">
+            <label for="visibility">👓 وضوح الرؤية :</label>
+            <input type="text" id="visibility" value="واضحة">
+        </div>
+
+        <h2>🚨 الإجراء الذي تم من قبل المقاول</h2>
+        <div class="checkbox-container">
+            <input type="checkbox" id="action1" checked>
+            <label for="action1">1️⃣ تأمين موقع الحادث.</label>
+        </div>
+        <div class="form-group">
+            <label>2️⃣ تنظيف موقع الحادث :</label>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div class="checkbox-container" style="margin-bottom: 0;">
+                    <input type="radio" id="clean-done" name="cleaning-status" value="تنظيف موقع الحادث." checked>
+                    <label for="clean-done">تم التنظيف</label>
+                </div>
+                <div class="checkbox-container" style="margin-bottom: 0;">
+                    <input type="radio" id="clean-in-progress" name="cleaning-status" value="جاري تنظيف موقع الحادث.">
+                    <label for="clean-in-progress">جاري التنظيف</label>
+                </div>
+            </div>
+        </div>
+        <div class="checkbox-container">
+            <input type="checkbox" id="action3" checked>
+            <label for="action3">3️⃣ وضع وسائل السلامة.</label>
+        </div>
+
+        <div class="copy-button-container">
+            <button class="copy-button" onclick="showReportModal()">
+                نسخ التقرير للواتساب
+            </button>
+            <button class="back-button" onclick="showInitialPage()">
+                العودة للقائمة الرئيسية
+            </button>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            ✅ تم نسخ التقرير بنجاح!
+        </div>
+
+        <p class="footer-note">🚧 المرور والسلامة بالمشروع 🚧</p>
+    </div>
+
+    <div id="settings-page" class="container" style="display: none;">
+        <h1>⚙ الإعدادات</h1>
+
+        <h2>🛣 إدارة الطرق</h2>
+        <div class="form-group">
+            <label for="new-road-name">اسم الطريق:</label>
+            <input type="text" id="new-road-name" placeholder="مثال: طريق الملك فهد">
+        </div>
+        <div class="form-group">
+            <label for="new-road-number">رقم الطريق:</label>
+            <input type="text" id="new-road-number" placeholder="مثال: 5">
+        </div>
+        <div class="copy-button-container">
+            <button class="copy-button" onclick="addRoad()">➕ إضافة طريق</button>
+        </div>
+        <div class="form-group">
+            <label>الطرق الحالية:</label>
+            <select id="current-roads-list" size="5" style="flex: 1; min-height: 120px;"></select>
+        </div>
+        <div class="copy-button-container">
+            <button class="back-button" onclick="removeSelectedRoad()">🗑 حذف المحدد</button>
+        </div>
+
+        <h2>🚘 إدارة المركبات</h2>
+        <div class="form-group">
+            <label for="new-car-company">اسم الشركة:</label>
+            <input type="text" id="new-car-company" placeholder="مثال: تويوتا">
+        </div>
+        <div class="form-group">
+            <label for="new-car-model">اسم المركبة:</label>
+            <input type="text" id="new-car-model" placeholder="مثال: كامري">
+        </div>
+        <div class="copy-button-container">
+            <button class="copy-button" onclick="addCarModel()">➕ إضافة مركبة</button>
+        </div>
+        <div class="form-group">
+            <label>المركبات الحالية:</label>
+            <select id="current-car-models-list" size="5" style="flex: 1; min-height: 120px;"></select>
+        </div>
+        <div class="copy-button-container">
+            <button class="back-button" onclick="removeSelectedCarModel()">🗑 حذف المحدد</button>
+        </div>
+
+        <h2>📃 إدارة أسباب الحوادث</h2>
+        <div class="form-group">
+            <label for="new-accident-reason">سبب جديد:</label>
+            <input type="text" id="new-accident-reason" placeholder="أدخل سبب حادث جديد">
+        </div>
+        <div class="copy-button-container">
+            <button class="copy-button" onclick="addAccidentReason()">➕ إضافة سبب</button>
+        </div>
+        <div class="form-group">
+            <label>الأسباب الحالية:</label>
+            <select id="current-accident-reasons-list" size="5" style="flex: 1; min-height: 120px;"></select>
+        </div>
+        <div class="copy-button-container">
+            <button class="back-button" onclick="removeSelectedAccidentReason()">🗑 حذف المحدد</button>
+        </div>
+
+        <h2>⛑ إدارة التلفيات</h2>
+        <div class="form-group">
+            <label for="new-damage">تلفيات جديدة:</label>
+            <input type="text" id="new-damage" placeholder="أدخل وصف تلفيات جديد">
+        </div>
+        <div class="copy-button-container">
+            <button class="copy-button" onclick="addDamage()">➕ إضافة تلفيات</button>
+        </div>
+        <div class="form-group">
+            <label>التلفيات الحالية:</label>
+            <select id="current-damages-list" size="5" style="flex: 1; min-height: 120px;"></select>
+        </div>
+        <div class="copy-button-container">
+            <button class="back-button" onclick="removeSelectedDamage()">🗑 حذف المحدد</button>
+        </div>
+
+        <h2>🏁 إدارة تباطؤ حركة المرور</h2>
+        <div class="form-group">
+            <label for="new-traffic-delay">تباطؤ جديد:</label>
+            <input type="text" id="new-traffic-delay" placeholder="أدخل وصف تباطؤ جديد">
+        </div>
+        <div class="copy-button-container">
+            <button class="copy-button" onclick="addTrafficDelay()">➕ إضافة تباطؤ</button>
+        </div>
+        <div class="form-group">
+            <label>التباطؤ الحالي:</label>
+            <select id="current-traffic-delays-list" size="5" style="flex: 1; min-height: 120px;"></select>
+        </div>
+        <div class="copy-button-container">
+            <button class="back-button" onclick="removeSelectedTrafficDelay()">🗑 حذف المحدد</button>
+        </div>
+
+        <div class="copy-button-container" style="margin-top: 50px;">
+            <button class="back-button" onclick="showInitialPage()">العودة للقائمة الرئيسية</button>
+        </div>
+    </div>
+
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeReportModal()">&times;</span>
+            <h3>التقرير الجاهز للنسخ</h3>
+            <textarea id="report-output" readonly></textarea>
+            <div class="modal-copy-button-container">
+                <button class="modal-copy-button" onclick="copyTextFromModal()">نسخ النص</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let accidentType = 'normal';
+
+        const defaultRoads = [{ name: 'مكة المكرمة / المدينة المنورة', number: '15' }];
+        const defaultAccidentReasons = [
+            "عدم الانتباه أدى إلى انحراف المركبة وانقلابها في الطريق.",
+            "عدم الانتباه أدى إلى انحراف المركبة وانقلابها خارج الطريق.",
+            "عدم الانتباه أدى إلى انحراف خارج الطريق.",
+            "عدم الانتباه أدى إلى انحراف المركبة واصدامها في الحاجز المعدني.",
+            "عدم الانتباه أدى إلى انحراف المركبة واصدامها في الحاجز المعدني ثم انقلابها خارج الطريق.",
+            "عدم الانتباه أدى إلى انحراف المركبة واصدامها في الحاجز المعدني وانقلابها.",
+            "عدم الانتباه أدى إلى انحراف المركبة واصدامها في الحاجز الخرساني",
+            "عدم الانتباه أدى إلى انحراف المركبة واصدامها في الحاجز الخرساني ثم انقلابها خارج الطريق.",
+            "عدم الانتباه أدى إلى انحراف المركبة واصدامها في الحاجز الخرساني وانقلابها.",
+            "عدم الانتباه أدى إلى انحراف المركبة واصدامها في السياج السلكي.",
+            "عدم الانتباه أدى إلى انحراف المركبة واصدامها في السياج السلكي وانقلابها.",
+            "عدم الانتباه أدى إلى انحراف المركبة واصدامها في السياج السلكي ثم انقلابها خارج الطريق.",
+            "عدم الانتباه أدى إلى انحراف المركبة واصدامها في السياج السلكي ثم انقلابها في الجزيرة الوسطية.",
+            "عدم الانتباه أدى إلى اصطدام المركبة في السياج في الجزيرة الوسطية.",
+            "عدم الانتباه أدى إلى اصطدام المركبة رقم 1 في المركبة رقم 2 من الخلف.",
+            "عدم الانتباه أدى إلى اصطدام المركبة رقم 1 في المركبة رقم 2 من الجنب.",
+            "عدم الانتباه أدى إلى اصطدام المركبة رقم 1 في المركبات رقم 2،3.",
+            "عدم الانتباه أدى إلى اصطدام المركبة رقم 1 في المركبات رقم 2،3،4.",
+            "عدم الانتباه أدى إلى اصطدام المركبة رقم 1 في المركبة رقم 2 من الخلف ثم انقلابها في الطريق.",
+            "عدم الانتباه أدى إلى اصطدام المركبة رقم 1 في المركبة رقم 2 من الخلف ثم انقلابها خارج الطريق.",
+            "عدم الانتباه أدى إلى اصطدام المركبة رقم 1 في المركبة رقم 2 من الخلف ثم انقلابها في الجزيرة الوسطية.",
+            "انفجار الإطار الأمامي أدى إلى انحراف المركبة.",
+            "انفجار الإطار الأمامي أدى إلى انحراف المركبة خارج الطريق.",
+            "انفجار الإطار الأمامي أدى إلى انحراف المركبة وانقلابها في الطريق.",
+            "انفجار الإطار الأمامي أدى إلى انحراف المركبة وانقلابها خارج الطريق.",
+            "انفجار الإطار الأمامي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف.",
+            "انفجار الإطار الأمامي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الجنب.",
+            "انفجار الإطار الأمامي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف ثم انقلابها في الطريق.",
+            "انفجار الإطار الأمامي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف ثم انقلابها خارج الطريق.",
+            "انفجار الإطار الأمامي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف ثم انقلابها في الجزيرة الوسطية.",
+            "انفجار الإطار الأمامي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف ثم انقلابها على السياج السلكي.",
+            "انفجار الإطار الأمامي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف ثم انقلابها على السياج السلكي بالجزيرة الوسطية.",
+            "انفجار الإطار الأمامي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف ثم انقلابها على الحاجز المعدني.",
+            "انفجار الإطار الأمامي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف ثم انقلابها على الحاجز الخرساني.",
+            "انفجار الإطار الخلفي أدى إلى انحراف المركبة.",
+            "انفجار الإطار الخلفي أدى إلى انحراف المركبة خارج الطريق.",
+            "انفجار الإطار الخلفي أدى إلى انحراف المركبة وانقلابها في الطريق.",
+            "انفجار الإطار الخلفي أدى إلى انحراف المركبة وانقلابها خارج الطريق.",
+            "انفجار الإطار الخلفي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف.",
+            "انفجار الإطار الخلفي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الجنب.",
+            "انفجار الإطار الخلفي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف ثم انقلابها في الطريق.",
+            "انفجار الإطار الخلفي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف ثم انقلابها خارج الطريق.",
+            "انفجار الإطار الخلفي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف ثم انقلابها في الجزيرة الوسطية.",
+            "انفجار الإطار الخلفي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف ثم انقلابها على السياج السلكي.",
+            "انفجار الإطار الخلفي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف ثم انقلابها على السياج السلكي بالجزيرة الوسطية.",
+            "انفجار الإطار الخلفي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف ثم انقلابها على الحاجز المعدني.",
+            "انفجار الإطار الخلفي أدى إلى انحراف المركبة رقم 1 واصطدامها في المركبة رقم 2 من الخلف ثم انقلابها على الحاجز الخرساني."
+        ];
+        const defaultDamages = ['لايوجد', 'تلفيات بسيطة', 'تلفيات متوسطة', 'تلفيات جسيمة'];
+        const defaultTrafficDelays = [
+            "لا يوجد تباطؤ",
+            "يوجد تباطؤ بسبب إغلاق مسار واحد ( مسار الشاحنات ).",
+            "يوجد تباطؤ بسبب إغلاق مسار واحد ( المسار الأوسط ).",
+            "يوجد تباطؤ بسبب إغلاق مسار واحد ( المسار السريع ).",
+            "يوجد تباطؤ بسبب إغلاق مسارين ( مسار الشاحنات + المسار الأوسط)",
+            "يوجد تباطؤ بسبب إغلاق مسارين ( مسار الشاحنات + المسار السريع )",
+            "يوجد تباطؤ بسبب إغلاق مسارين ( مسار الأوسط + المسار السريع )",
+            "الطريق مغلق بالكامل"
+        ];
+
+        const defaultCarModels = []; 
+
+        let roads = [];
+        let accidentReasons = [];
+        let damages = [];
+        let trafficDelays = [];
+        let carModels = [];
+
+        function loadData(key, defaultValue) {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : defaultValue;
+        }
+
+        function saveData(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function populateRoadSelect() {
+            const select = document.getElementById('road-name-select');
+            select.innerHTML = '';
+            roads.forEach(road => {
+                const option = document.createElement('option');
+                option.value = road.number;
+                option.textContent = road.name;
+                select.appendChild(option);
+            });
+            if (roads.length > 0) {
+                const currentRoadNumber = document.getElementById('road-number-display').value;
+                const foundRoad = roads.find(road => road.number === currentRoadNumber);
+                if (foundRoad) {
+                    select.value = foundRoad.number;
+                } else {
+                    select.value = roads[0].number;
+                    document.getElementById('road-number-display').value = roads[0].number;
+                }
+            } else {
+                document.getElementById('road-number-display').value = '';
+            }
+        }
+
+        function populateAccidentReasonsDatalist() {
+            const datalist = document.getElementById('accident-reason-options');
+            datalist.innerHTML = '';
+            accidentReasons.forEach(reason => {
+                const option = document.createElement('option');
+                option.value = reason;
+                datalist.appendChild(option);
+            });
+        }
+
+        function populateDamagesDatalist() {
+            const datalist = document.getElementById('damages-options');
+            datalist.innerHTML = '';
+            damages.forEach(damage => {
+                const option = document.createElement('option');
+                option.value = damage;
+                datalist.appendChild(option);
+            });
+        }
+
+        function populateTrafficDelaysDatalist() {
+            const datalist = document.getElementById('traffic-delay-options');
+            datalist.innerHTML = '';
+            trafficDelays.forEach(delay => {
+                const option = document.createElement('option');
+                option.value = delay;
+                datalist.appendChild(option);
+            });
+        }
+
+        function populateCarModelsDatalist() {
+            const datalist = document.getElementById('car-models-options');
+            datalist.innerHTML = '';
+            carModels.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model;
+                datalist.appendChild(option);
+            });
+        }
+
+        function populateSettingsRoadsList() {
+            const select = document.getElementById('current-roads-list');
+            select.innerHTML = '';
+            roads.forEach((road, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = ${road.name} (رقم: ${road.number});
+                select.appendChild(option);
+            });
+        }
+
+        function populateSettingsAccidentReasonsList() {
+            const select = document.getElementById('current-accident-reasons-list');
+            select.innerHTML = '';
+            accidentReasons.forEach((reason, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = reason;
+                select.appendChild(option);
+            });
+        }
+
+        function populateSettingsDamagesList() {
+            const select = document.getElementById('current-damages-list');
+            select.innerHTML = '';
+            damages.forEach((damage, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = damage;
+                select.appendChild(option);
+            });
+        }
+
+        function populateSettingsTrafficDelaysList() {
+            const select = document.getElementById('current-traffic-delays-list');
+            select.innerHTML = '';
+            trafficDelays.forEach((delay, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = delay;
+                select.appendChild(option);
+            });
+        }
+
+        function populateSettingsCarModelsList() {
+            const select = document.getElementById('current-car-models-list');
+            select.innerHTML = '';
+            carModels.forEach((model, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = model;
+                select.appendChild(option);
+            });
+        }
+
+        function addRoad() {
+            const nameInput = document.getElementById('new-road-name');
+            const numberInput = document.getElementById('new-road-number');
+            const newRoadName = nameInput.value.trim();
+            const newRoadNumber = numberInput.value.trim();
+
+            if (newRoadName && newRoadNumber) {
+                if (!roads.some(road => road.name === newRoadName && road.number === newRoadNumber)) {
+                    roads.push({ name: newRoadName, number: newRoadNumber });
+                    saveData('roads', roads);
+                    populateSettingsRoadsList();
+                    populateRoadSelect();
+                    nameInput.value = '';
+                    numberInput.value = '';
+                } else {
+                    alert('هذا الطريق موجود بالفعل.');
+                }
+            } else {
+                alert('الرجاء إدخال اسم ورقم الطريق.');
+            }
+        }
+
+        function removeSelectedRoad() {
+            const select = document.getElementById('current-roads-list');
+            const selectedIndex = select.value;
+            if (selectedIndex !== null && selectedIndex !== "") {
+                roads.splice(parseInt(selectedIndex), 1);
+                saveData('roads', roads);
+                populateSettingsRoadsList();
+                populateRoadSelect();
+            } else {
+                alert('الرجاء اختيار طريق لحذفه.');
+            }
+        }
+
+        function addCarModel() {
+            const companyInput = document.getElementById('new-car-company');
+            const modelInput = document.getElementById('new-car-model');
+            const newCompany = companyInput.value.trim();
+            const newModel = modelInput.value.trim();
+            const fullModelName = ${newCompany} ${newModel}.trim();
+
+            if (newCompany && newModel) {
+                if (!carModels.includes(fullModelName)) {
+                    carModels.push(fullModelName);
+                    saveData('carModels', carModels);
+                    populateSettingsCarModelsList();
+                    populateCarModelsDatalist();
+                    companyInput.value = '';
+                    modelInput.value = '';
+                } else {
+                    alert('هذه المركبة موجودة بالفعل.');
+                }
+            } else {
+                alert('الرجاء إدخال اسم الشركة واسم المركبة.');
+            }
+        }
+
+        function removeSelectedCarModel() {
+            const select = document.getElementById('current-car-models-list');
+            const selectedIndex = select.value;
+            if (selectedIndex !== null && selectedIndex !== "") {
+                carModels.splice(parseInt(selectedIndex), 1);
+                saveData('carModels', carModels);
+                populateSettingsCarModelsList();
+                populateCarModelsDatalist();
+            } else {
+                alert('الرجاء اختيار مركبة لحذفها.');
+            }
+        }
+
+        function addAccidentReason() {
+            const input = document.getElementById('new-accident-reason');
+            const newReason = input.value.trim();
+            if (newReason && !accidentReasons.includes(newReason)) {
+                accidentReasons.push(newReason);
+                saveData('accidentReasons', accidentReasons);
+                populateSettingsAccidentReasonsList();
+                populateAccidentReasonsDatalist();
+                input.value = '';
+            } else if (accidentReasons.includes(newReason)) {
+                alert('هذا السبب موجود بالفعل.');
+            } else {
+                alert('الرجاء إدخال سبب حادث جديد.');
+            }
+        }
+
+        function removeSelectedAccidentReason() {
+            const select = document.getElementById('current-accident-reasons-list');
+            const selectedIndex = select.value;
+            if (selectedIndex !== null && selectedIndex !== "") {
+                accidentReasons.splice(parseInt(selectedIndex), 1);
+                saveData('accidentReasons', accidentReasons);
+                populateSettingsAccidentReasonsList();
+                populateAccidentReasonsDatalist();
+            } else {
+                alert('الرجاء اختيار سبب لحذفه.');
+            }
+        }
+
+        function addDamage() {
+            const input = document.getElementById('new-damage');
+            const newDamage = input.value.trim();
+            if (newDamage && !damages.includes(newDamage)) {
+                damages.push(newDamage);
+                saveData('damages', damages);
+                populateSettingsDamagesList();
+                populateDamagesDatalist();
+                input.value = '';
+            } else if (damages.includes(newDamage)) {
+                alert('هذا الوصف موجود بالفعل.');
+            } else {
+                alert('الرجاء إدخال وصف تلفيات جديد.');
+            }
+        }
+
+        function removeSelectedDamage() {
+            const select = document.getElementById('current-damages-list');
+            const selectedIndex = select.value;
+            if (selectedIndex !== null && selectedIndex !== "") {
+                damages.splice(parseInt(selectedIndex), 1);
+                saveData('damages', damages);
+                populateSettingsDamagesList();
+                populateDamagesDatalist();
+            } else {
+                alert('الرجاء اختيار تلفيات لحذفها.');
+            }
+        }
+
+        function addTrafficDelay() {
+            const input = document.getElementById('new-traffic-delay');
+            const newDelay = input.value.trim();
+            if (newDelay && !trafficDelays.includes(newDelay)) {
+                trafficDelays.push(newDelay);
+                saveData('trafficDelays', trafficDelays);
+                populateSettingsTrafficDelaysList();
+                populateTrafficDelaysDatalist();
+                input.value = '';
+            } else if (trafficDelays.includes(newDelay)) {
+                alert('هذا الوصف موجود بالفعل.');
+            } else {
+                alert('الرجاء إدخال وصف تباطؤ جديد.');
+            }
+        }
+
+        function removeSelectedTrafficDelay() {
+            const select = document.getElementById('current-traffic-delays-list');
+            const selectedIndex = select.value;
+            if (selectedIndex !== null && selectedIndex !== "") {
+                trafficDelays.splice(parseInt(selectedIndex), 1);
+                saveData('trafficDelays', trafficDelays);
+                populateSettingsTrafficDelaysList();
+                populateTrafficDelaysDatalist();
+            } else {
+                alert('الرجاء اختيار تباطؤ لحذفه.');
+            }
+        }
+
+        function generateCarInputs(count) {
+            const container = document.getElementById('car-details-container');
+            container.innerHTML = '';
+            for (let i = 1; i <= count; i++) {
+                const carDetailHtml = `
+                    <div class="car-details">
+                        <h4>السيارة رقم ${i}</h4>
+                        <div class="form-group">
+                            <label for="car-type-${i}">نوعها :</label>
+                            <input type="text" id="car-type-${i}" list="car-models-options" placeholder="ادخل نوع المركبة">
+                        </div>
+                        <div class="form-group car-plate-numbers">
+                            <label>رقم اللوحة :</label>
+                            <span>(</span>
+                            <input type="text" id="plate-letters-${i}" maxlength="3" placeholder="أحرف">
+                            <span>/</span>
+                            <input type="number" id="plate-numbers-${i}" maxlength="4" placeholder="أرقام">
+                            <span>)</span>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', carDetailHtml);
+            }
+            populateCarModelsDatalist();
+        }
+
+        function showInitialPage() {
+            document.getElementById('initial-page').style.display = 'block';
+            document.getElementById('report-form-container').style.display = 'none';
+            document.getElementById('settings-page').style.display = 'none';
+            resetFormFields();
+        }
+
+        function showReportForm() {
+            document.getElementById('initial-page').style.display = 'none';
+            document.getElementById('report-form-container').style.display = 'block';
+            document.getElementById('settings-page').style.display = 'none';
+            populateRoadSelect();
+            populateAccidentReasonsDatalist();
+            populateDamagesDatalist();
+            populateTrafficDelaysDatalist();
+            populateCarModelsDatalist(); 
+        }
+
+        function showSettingsPage() {
+            document.getElementById('initial-page').style.display = 'none';
+            document.getElementById('report-form-container').style.display = 'none';
+            document.getElementById('settings-page').style.display = 'block';
+            populateSettingsRoadsList();
+            populateSettingsAccidentReasonsList();
+            populateSettingsDamagesList();
+            populateSettingsTrafficDelaysList();
+            populateSettingsCarModelsList(); 
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            roads = loadData('roads', defaultRoads);
+            accidentReasons = loadData('accidentReasons', defaultAccidentReasons);
+            damages = loadData('damages', defaultDamages);
+            trafficDelays = loadData('trafficDelays', defaultTrafficDelays);
+            carModels = loadData('carModels', defaultCarModels);
+
+            populateRoadSelect();
+            populateAccidentReasonsDatalist();
+            populateDamagesDatalist();
+            populateTrafficDelaysDatalist();
+            populateCarModelsDatalist();
+
+            const carCountInput = document.getElementById('car-count');
+            const carDetailsContainer = document.getElementById('car-details-container');
+            const dateInput = document.getElementById('date');
+            const dayInput = document.getElementById('day');
+            const accidentReasonSearchInput = document.getElementById('accident-reason-search');
+            const accidentReasonDisplay = document.getElementById('accident-reason-display');
+            const hourInput = document.getElementById('hour');
+            const roadNameSelect = document.getElementById('road-name-select');
+            const roadNumberDisplay = document.getElementById('road-number-display');
+
+            accidentReasonSearchInput.addEventListener('input', function() {
+                accidentReasonDisplay.value = this.value;
+            });
+
+            const daysOfWeek = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            dateInput.value = ${year}-${month}-${day};
+            dayInput.value = daysOfWeek[now.getDay()];
+
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'مساءً' : 'صباحًا';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            const formattedTime = ${String(hours).padStart(2, '0')}:${minutes} ${ampm};
+            hourInput.value = formattedTime;
+
+            generateCarInputs(parseInt(carCountInput.value));
+
+            carCountInput.addEventListener('input', function() {
+                const count = parseInt(this.value);
+                if (!isNaN(count) && count >= 0) {
+                    generateCarInputs(count);
+                } else {
+                    carDetailsContainer.innerHTML = '';
+                }
+            });
+
+            dateInput.addEventListener('change', function() {
+                if (this.value) {
+                    const date = new Date(this.value + 'T00:00:00');
+                    dayInput.value = daysOfWeek[date.getDay()];
+                } else {
+                    dayInput.value = '';
+                }
+            });
+
+            roadNameSelect.addEventListener('change', function() {
+                roadNumberDisplay.value = this.value;
+            });
+            if (roadNameSelect.options.length > 0) {
+                roadNumberDisplay.value = roadNameSelect.value;
+            }
+        });
+
+        function startReport(type) {
+            accidentType = type;
+            const reportTitle = document.getElementById('report-title');
+            const locationField = document.getElementById('location-field');
+            const injuriesCountInput = document.getElementById('injuries-count');
+            const fatalitiesCountInput = document.getElementById('fatalities-count');
+
+            showReportForm(); 
+
+            let accentColor = '#3498db';
+
+            if (type === 'fatal') {
+                accentColor = '#c0392b';
+                locationField.style.display = 'flex';
+                fatalitiesCountInput.value = 'يوجد';
+                injuriesCountInput.value = 'لايوجد';
+            } else if (type === 'injuries') {
+                accentColor = '#f39c12';
+                locationField.style.display = 'none';
+                injuriesCountInput.value = 'يوجد';
+                fatalitiesCountInput.value = 'لايوجد';
+            } else {
+                accentColor = '#3498db';
+                locationField.style.display = 'none';
+                injuriesCountInput.value = 'لايوجد';
+                fatalitiesCountInput.value = 'لايوجد';
+            }
+            
+            reportTitle.style.color = accentColor;
+            document.documentElement.style.setProperty('--h1-after-background', accentColor);
+        }
+
+        function resetFormFields() {
+            document.getElementById('report-id').value = '';
+            document.getElementById('location-text').value = '';
+            
+            const roadSelect = document.getElementById('road-name-select');
+            if (roadSelect.options.length > 0) {
+                roadSelect.value = roadSelect.options[0].value;
+                document.getElementById('road-number-display').value = roadSelect.options[0].value;
+            } else {
+                document.getElementById('road-number-display').value = '';
+            }
+
+            document.getElementById('road-type').value = 'سريع';
+            document.getElementById('kilometer-mark-m').value = '';
+            document.getElementById('kilometer-mark-km').value = '';
+            document.getElementById('direction').value = 'رئيسي';
+            document.getElementById('location-description').value = '';
+            document.getElementById('contract-number').value = '404';
+            document.getElementById('contractor-name').value = 'مطلق الغويري للمقاولات';
+            
+            if (accidentType === 'fatal') {
+                document.getElementById('fatalities-count').value = 'يوجد';
+                document.getElementById('injuries-count').value = 'لايوجد';
+            } else if (accidentType === 'injuries') {
+                document.getElementById('injuries-count').value = 'يوجد';
+                document.getElementById('fatalities-count').value = 'لايوجد';
+            } else {
+                document.getElementById('injuries-count').value = 'لايوجد';
+                document.getElementById('fatalities-count').value = 'لايوجد';
+            }
+
+            document.getElementById('damages-input').value = 'لايوجد'; 
+            document.getElementById('car-count').value = '2';
+            document.getElementById('accident-reason-search').value = '';
+            document.getElementById('accident-reason-display').value = '';
+            
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            document.getElementById('date').value = ${year}-${month}-${day};
+            const daysOfWeek = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            document.getElementById('day').value = daysOfWeek[now.getDay()];
+
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'مساءً' : 'صباحًا';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            const formattedTime = ${String(hours).padStart(2, '0')}:${minutes} ${ampm};
+            document.getElementById('hour').value = formattedTime;
+
+            document.getElementById('traffic-delay-input').value = 'لا يوجد تباطؤ'; 
+            document.getElementById('weather-condition').value = 'صحو';
+            document.getElementById('road-condition').value = 'جيدة';
+            document.getElementById('visibility').value = 'واضحة';
+            document.getElementById('action1').checked = true;
+            document.getElementById('clean-done').checked = true; 
+            document.getElementById('action3').checked = true;
+
+            document.getElementById('car-details-container').innerHTML = '';
+            document.getElementById('car-count').dispatchEvent(new Event('input'));
+        }
+
+        function collectReportData() {
+            let reportText = "";
+            const locationText = document.getElementById('location-text').value;
+
+            if (accidentType === 'fatal') {
+                reportText += 🔴 بلاغ عاجل بوقوع حادث مروري 🔴\n\n;
+            } else if (accidentType === 'injuries') {
+                reportText += 🟡 بلاغ عاجل بوقوع حادث مروري 🟡\n\n;
+            } else {
+                reportText += 🔵 بلاغ عاجل بوقوع حادث مروري 🔵\n\n;
+            }
+
+            const getValue = (id) => document.getElementById(id) ? document.getElementById(id).value.trim() || '---' : '---';
+            const getSelectedText = (id) => {
+                const selectElement = document.getElementById(id);
+                return selectElement && selectElement.options.length > 0 ? selectElement.options[selectElement.selectedIndex].text : '---';
+            };
+
+            reportText += 🔳 رقم البلاغ في رقابة +: (${getValue('report-id')})\n\n;
+
+            reportText += "📍 معلومات الموقع\n"; 
+            
+            const selectedRoadName = getSelectedText('road-name-select');
+            const selectedRoadNumber = getValue('road-number-display');
+
+            reportText += 🛣 اسم الطريق : ${selectedRoadName}\n;
+            reportText += 🛣 رقم الطريق : ${selectedRoadNumber}\n; 
+            reportText += 🛣 نوع الطريق : ${getSelectedText('road-type')}\n; 
+
+            const kmMarkKm = getValue('kilometer-mark-km');
+            const kmMarkM = getValue('kilometer-mark-m');
+            
+            const displayKm = kmMarkKm !== '---' && kmMarkKm !== '' ? kmMarkKm : '_';
+            const displayM = kmMarkM !== '---' && kmMarkM !== '' ? kmMarkM : '_';
+
+            reportText += 🛣 العلامة الكيلومترية: (${displayM} + ${displayKm})\n;
+
+            reportText += 🛣 الاتجاه : ${getSelectedText('direction')}\n;
+            reportText += 🛣 وصف الموقع : ${getValue('location-description')}\n;
+            reportText += 🛣 رقم العقد : ${getValue('contract-number')}\n;
+            reportText += 🛣 اسم المقاول : ${getValue('contractor-name')}\n\n;
+
+            reportText += "🛑 نتيجة الحادث\n";
+            reportText += ⛑ عدد الإصابات : ${getValue('injuries-count')}\n;
+            reportText += ⛑ عدد الوفيات : ${getValue('fatalities-count')}\n;
+            reportText += ⛑ التلفيات: ${getValue('damages-input')}\n\n;
+
+            const carCount = parseInt(getValue('car-count')) || 0;
+            reportText += 🚙 عدد السيارات : ${carCount}\n;
+            for (let i = 1; i <= carCount; i++) {
+                const carType = getValue(car-type-${i});
+                const plateLetters = getValue(plate-letters-${i});
+                const plateNumbers = getValue(plate-numbers-${i});
+
+                reportText += ${i}: 🚘 نوعها : ${carType}\n;
+                reportText += `  رقم اللوحة : ( ${plateLetters} / ${plateNumbers} )\n`;
+            }
+            reportText += "\n";
+
+            reportText += 📃 سبب الحادث : ${getValue('accident-reason-display')}\n\n;
+
+            const dateValue = getValue('date');
+            let formattedDate = '---';
+            if (dateValue && dateValue !== '---') {
+                const parts = dateValue.split('-');
+                if (parts.length === 3) {
+                    formattedDate = ${parts[2]}/${parts[1]}/${parts[0]};
+                }
+            }
+            reportText += ■ الساعة: ${getValue('hour')}\n;
+            reportText += ■ التاريخ: ${formattedDate}\n;
+            reportText += ■ اليوم : ${getValue('day')}\n\n;
+
+            reportText += "🗒 معلومات عامة\n";
+            reportText += 🏁 زمن تباطؤ حركة المرور: ${getValue('traffic-delay-input')}\n;
+            reportText += 🏞 الحالة الجوية : ${getSelectedText('weather-condition')}\n;
+            reportText += 🛣 حالة الطريق : ${getValue('road-condition')}\n;
+            reportText += 👓 وضوح الرؤية : ${getValue('visibility')}\n\n;
+
+            reportText += "🚨 الإجراء الذي تم من قبل المقاول\n";
+            let actionsTaken = [];
+            if (document.getElementById('action1').checked) actionsTaken.push("1️⃣ تأمين موقع الحادث.");
+            
+            const cleaningStatusRadios = document.getElementsByName('cleaning-status');
+            let selectedCleaningStatus = '';
+            for (const radio of cleaningStatusRadios) {
+                if (radio.checked) {
+                    selectedCleaningStatus = radio.value;
+                    break;
+                }
+            }
+            if (selectedCleaningStatus) {
+                actionsTaken.push(2️⃣ ${selectedCleaningStatus});
+            }
+
+            if (document.getElementById('action3').checked) actionsTaken.push("3️⃣ وضع وسائل السلامة.");
+
+            if (actionsTaken.length > 0) {
+                actionsTaken.forEach(action => {
+                    reportText += • ${action} .\n; 
+                });
+            } else {
+                reportText += "• لا يوجد إجراءات محددة.\n";
+            }
+            reportText += "\n";
+
+            reportText += "🚧 المرور والسلامة بالمشروع 🚧";
+            return reportText;
+        }
+
+        const reportModal = document.getElementById('reportModal');
+        const reportOutput = document.getElementById('report-output');
+        const successMessage = document.getElementById('successMessage');
+
+        function showReportModal() {
+            reportOutput.value = collectReportData();
+            reportModal.style.display = 'block';
+            successMessage.style.display = 'none';
+        }
+
+        function closeReportModal() {
+            reportModal.style.display = 'none';
+        }
+
+        function copyTextFromModal() {
+            reportOutput.select();
+            reportOutput.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(reportOutput.value).then(() => {
+                closeReportModal();
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 3000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert("حدث خطأ أثناء النسخ. يرجى المحاولة مرة أخرى.");
+            });
+        }
+
+        window.onclick = function(event) {
+            if (event.target == reportModal) {
+                closeReportModal();
+            }
+        }
+    </script>
+</body>
+</html>
